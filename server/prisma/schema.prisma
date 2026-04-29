@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+   id        String   @id @default(cuid())
+  email      String   @unique
+  password   String
+  username   String
+  niveau     String   @default("débutant")
+  createdAt  DateTime @default(now())
+
+  songs            Song[]
+  userChords       UserChord[]
+  practiceSessions PracticeSession[]
+}
+
+model Song {
+  id                String   @id @default(cuid())
+  userId            String
+  titre             String
+  artiste           String?
+  youtubeUrl        String?
+  youtubeThumbnail  String?
+  statut            String   @default("à apprendre")
+  createdAt         DateTime @default(now())
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  songChords SongChord[]
+}
+
+model Chord {
+  id           String  @id @default(cuid())
+  nom          String
+  difficulte   String  @default("facile")
+  diagrammeUrl String?
+
+  userChords UserChord[]
+  songChords SongChord[]
+}
+
+model UserChord {
+  id        String   @id @default(cuid())
+  userId    String
+  chordId   String
+  statut    String   @default("en apprentissage")
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chord Chord @relation(fields: [chordId], references: [id], onDelete: Cascade)
+}
+
+model SongChord {
+  id      String @id @default(cuid())
+  songId  String
+  chordId String
+
+  song  Song  @relation(fields: [songId], references: [id], onDelete: Cascade)
+  chord Chord @relation(fields: [chordId], references: [id], onDelete: Cascade)
+}
+
+model PracticeSession {
+  id            String   @id @default(cuid())
+  userId        String
+  dureeMinutes  Int
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
