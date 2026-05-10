@@ -13,7 +13,7 @@ const app = express()
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://ukutrack-5qef.vercel.app"
+        "https://ukutrack2026.vercel.app"
     ],
     credentials: true
 }))
