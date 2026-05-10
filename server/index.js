@@ -28,6 +28,9 @@ app.use("/chords", chordsRoutes)
 const sessionsRoutes = require("./routes/sessions")
 app.use("/sessions", sessionsRoutes)
 
+const profileRoutes = require("./routes/profile")
+app.use("/profile", profileRoutes)
+
 const PORT = 3001
 
 app.listen(PORT, () => {

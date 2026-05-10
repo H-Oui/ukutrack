@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,23 +22,38 @@ model User {
 
 model Song {
   id                String   @id @default(cuid())
-  userId            String
   titre             String
-  artiste           String?
-  youtubeUrl        String?
-  youtubeThumbnail  String?
+  artiste           String
+  youtubeUrl        String
+  youtubeThumbnail  String
   statut            String   @default("à apprendre")
-  createdAt         DateTime @default(now())
 
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  songChords SongChord[]
+  commentaire       String?
+
+  userId            String
+  user              User @relation(fields: [userId], references: [id])
+
+  songChords        SongChord[]
 }
 
 model Chord {
-  id           String  @id @default(cuid())
-  nom          String
-  difficulte   String  @default("facile")
-  diagrammeUrl String?
+  id            String   @id @default(cuid())
+
+  nom           String
+  symbole       String?  // C, Am, F#m7...
+  tonalite      String?  // C, D, E...
+  type          String?  // majeur, mineur, 7, maj7...
+
+  difficulte    String   @default("facile")
+
+  diagrammeUrl  String?
+  youtubeUrl    String?
+
+  description   String?
+
+  tags          String? // "pop,rock,jazz"
+
+  createdAt     DateTime @default(now())
 
   userChords UserChord[]
   songChords SongChord[]
@@ -56,14 +71,14 @@ model UserChord {
 }
 
 model SongChord {
-  id      String @id @default(cuid())
-  songId  String
-  chordId String
+  id       String @id @default(cuid())
 
-  song  Song  @relation(fields: [songId], references: [id], onDelete: Cascade)
-  chord Chord @relation(fields: [chordId], references: [id], onDelete: Cascade)
+  songId   String
+  chordId  String
+
+  song     Song @relation(fields: [songId], references: [id])
+  chord    Chord @relation(fields: [chordId], references: [id])
 }
-
 model PracticeSession {
   id            String   @id @default(cuid())
   userId        String
