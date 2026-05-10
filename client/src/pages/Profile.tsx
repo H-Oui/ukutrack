@@ -72,7 +72,7 @@ const styles = {
     } as React.CSSProperties,
     infoGrid: {
         display: "grid",
-        gridTemplateColumns: "1fr 1fr",
+        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
         gap: "12px"
     } as React.CSSProperties,
     infoItem: {

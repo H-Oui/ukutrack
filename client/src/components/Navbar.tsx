@@ -9,6 +9,7 @@ export default function Navbar() {
     const navigate = useNavigate()
     const location = useLocation()
     const [scrolled, setScrolled] = useState(false)
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -32,117 +33,127 @@ export default function Navbar() {
     ]
 
     return (
-        <nav style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            backgroundColor: "var(--navbar-bg)",
-            backdropFilter: "blur(12px)",
-            borderBottom: `1px solid var(--border)`,
-            boxShadow: scrolled ? "var(--shadow)" : "none",
-            transition: "box-shadow 0.3s ease"
-        }}>
-            <div style={{
-                maxWidth: 1100,
-                margin: "0 auto",
-                padding: "0 20px",
-                height: 64,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between"
+        <>
+            <nav style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                backgroundColor: "var(--navbar-bg)",
+                backdropFilter: "blur(12px)",
+                borderBottom: "1px solid var(--border)",
+                boxShadow: scrolled ? "var(--shadow)" : "none"
             }}>
-                {/* Logo */}
-                <div
-                    onClick={() => navigate("/dashboard")}
-                    style={{
+                <div style={{
+                    maxWidth: 1100,
+                    margin: "0 auto",
+                    padding: "0 16px",
+                    height: 64,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+                }}>
+                    {/* LOGO */}
+                    <div onClick={() => navigate("/dashboard")} style={{
                         cursor: "pointer",
                         fontWeight: 800,
                         fontSize: "1.2rem",
-                        color: "var(--accent)",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        letterSpacing: "-0.5px"
-                    }}
-                >
-                    🎸 UkuTrack
-                </div>
+                        color: "var(--accent)"
+                    }}>
+                        🎸 UkuTrack
+                    </div>
 
-                {/* Liens desktop */}
-                <div style={{
-                    display: "flex",
-                    gap: 4,
-                    alignItems: "center"
-                }}>
-                    {links.map(({ path, label, icon }) => (
-                        <button
-                            key={path}
-                            onClick={() => navigate(path)}
-                            style={{
-                                padding: "8px 14px",
+                    {/* DESKTOP LINKS */}
+                    <div className="desktop-nav" style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                        {links.map(({ path, label, icon }) => (
+                            <button key={path} onClick={() => navigate(path)} style={{
+                                padding: "8px 12px",
                                 borderRadius: 10,
                                 border: "none",
                                 cursor: "pointer",
                                 fontWeight: isActive(path) ? 700 : 500,
-                                fontSize: "0.9rem",
                                 backgroundColor: isActive(path) ? "var(--accent-light)" : "transparent",
                                 color: isActive(path) ? "var(--accent)" : "var(--text-secondary)",
-                                transition: "all 0.2s ease",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6
-                            }}
-                            onMouseEnter={e => {
-                                if (!isActive(path)) {
-                                    (e.target as HTMLElement).style.backgroundColor = "var(--bg-secondary)"
-                                    ;(e.target as HTMLElement).style.color = "var(--text-primary)"
-                                }
-                            }}
-                            onMouseLeave={e => {
-                                if (!isActive(path)) {
-                                    (e.target as HTMLElement).style.backgroundColor = "transparent"
-                                    ;(e.target as HTMLElement).style.color = "var(--text-secondary)"
-                                }
-                            }}
-                        >
-                            <span>{icon}</span>
-                            <span>{label}</span>
-                        </button>
-                    ))}
-                </div>
+                            }}>
+                                {icon} {label}
+                            </button>
+                        ))}
+                    </div>
 
-                {/* Actions */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    {/* Toggle theme */}
-                    <button
-                        onClick={toggleTheme}
-                        style={{
+                    {/* ACTIONS */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <button onClick={toggleTheme} style={{
                             width: 40,
                             height: 40,
                             borderRadius: 12,
-                            border: "1.5px solid var(--border)",
-                            backgroundColor: "var(--bg-secondary)",
-                            cursor: "pointer",
-                            fontSize: "1.1rem",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transition: "all 0.2s ease"
-                        }}
-                    >
-                        {theme === "light" ? "🌙" : "☀️"}
-                    </button>
+                            border: "1px solid var(--border)"
+                        }}>
+                            {theme === "light" ? "🌙" : "☀️"}
+                        </button>
 
-                    {/* Logout */}
-                    <button
-                        onClick={handleLogout}
-                        className="btn btn-danger"
-                        style={{ padding: "8px 16px" }}
-                    >
-                        Déconnexion
-                    </button>
+                        <button onClick={handleLogout} className="btn btn-danger desktop-only">
+                            Déconnexion
+                        </button>
+
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className="mobile-only"
+                            style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: 10,
+                                border: "1px solid var(--border)",
+                                background: "var(--bg-secondary)"
+                            }}
+                        >
+                            ☰
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </nav>
+
+                {/* MOBILE MENU */}
+                {open && (
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "10px",
+                        gap: 8,
+                        borderTop: "1px solid var(--border)"
+                    }}>
+                        {links.map(({ path, label, icon }) => (
+                            <button key={path} onClick={() => { navigate(path); setOpen(false) }} style={{
+                                padding: "10px",
+                                borderRadius: 10,
+                                border: "none",
+                                textAlign: "left",
+                                cursor: "pointer",
+                                backgroundColor: isActive(path) ? "var(--accent-light)" : "transparent",
+                                color: isActive(path) ? "var(--accent)" : "var(--text-primary)",
+                            }}>
+                                {icon} {label}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => { handleLogout(); setOpen(false) }}
+                            className="btn btn-danger"
+                            style={{ textAlign: "left" }}
+                        >
+                            Déconnexion
+                        </button>
+                    </div>
+                )}
+            </nav>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .desktop-nav { display: none !important; }
+                    .desktop-only { display: none !important; }
+                    .mobile-only { display: flex !important; align-items: center; justify-content: center; }
+                }
+                @media (min-width: 769px) {
+                    .mobile-only { display: none !important; }
+                }
+            `}</style>
+        </>
     )
 }

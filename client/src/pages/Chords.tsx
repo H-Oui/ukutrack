@@ -63,6 +63,7 @@ const styles = {
         gap: "8px",
         marginBottom: "16px",
         flexWrap: "wrap",
+        rowGap: "8px",
         alignItems: "center"
     } as React.CSSProperties,
     filterLabel: {
@@ -73,8 +74,7 @@ const styles = {
     } as React.CSSProperties,
     chordsGrid: {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-        gap: "14px",
+        gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
         marginTop: "24px"
     } as React.CSSProperties,
     chordName: {
@@ -123,7 +123,9 @@ const styles = {
         marginBottom: "16px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "6px"
     } as React.CSSProperties
 }
 
@@ -272,7 +274,7 @@ export default function Chords() {
             </div>
 
             <div style={styles.filtersRow}>
-                <span style={styles.filterLabel}>Difficulté :</span>
+                <span style={{ ...styles.filterLabel, width: "100%" }}>Difficulté :</span>
                 {[
                     { value: "tous", label: "Tous" },
                     { value: "easy", label: "🟢 easy" },
@@ -290,7 +292,7 @@ export default function Chords() {
             </div>
 
             <div style={{ ...styles.filtersRow, marginBottom: "8px" }}>
-                <span style={styles.filterLabel}>Statut :</span>
+                <span style={{ ...styles.filterLabel, width: "100%" }}>Statut :</span>
                 {[
                     { value: "tous", label: "Tous" },
                     { value: "non commencé", label: "⬜ Non commencé" },

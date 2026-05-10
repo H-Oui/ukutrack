@@ -49,12 +49,12 @@ const styles = {
         alignItems: "center",
         gap: "8px"
     } as React.CSSProperties,
-    twoCol: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "16px",
-        marginBottom: "24px"
-    } as React.CSSProperties,
+        twoCol: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "16px",
+            marginBottom: "24px"
+        } as React.CSSProperties,
     miniStatRow: {
         display: "flex",
         flexDirection: "column",
@@ -304,7 +304,8 @@ export default function Dashboard() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", // ✅ était display flex
                     gap: "16px",
                     marginBottom: "24px"
                 }as React.CSSProperties}

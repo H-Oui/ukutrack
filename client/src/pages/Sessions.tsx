@@ -91,7 +91,9 @@ const styles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: "16px"
+        marginBottom: "16px",
+        flexWrap: "wrap",
+        gap: "8px"
     } as React.CSSProperties,
     historyCount: {
         fontSize: "0.85rem",
@@ -345,6 +347,7 @@ export default function Sessions() {
                         disabled={loading || !duree}
                         variant="primary"
                         style={{ alignSelf: "flex-start" } as React.CSSProperties}
+                        fullWidth
                     >
                         {loading ? "Enregistrement..." : "✅ Enregistrer"}
                     </Button>

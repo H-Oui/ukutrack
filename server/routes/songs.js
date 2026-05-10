@@ -29,12 +29,16 @@ router.post("/", auth, async (req, res) => {
     res.json(song)
 })
 
-// UPDATE statut
+// UPDATE statut + commentaire
 router.patch("/:id", auth, async (req, res) => {
-    const { statut } = req.body
+    const { statut, commentaire } = req.body
+
     const song = await prisma.song.update({
         where: { id: req.params.id },
-        data: { statut }
+        data: {
+            ...(statut !== undefined && { statut }),
+            ...(commentaire !== undefined && { commentaire })
+        }
     })
     res.json(song)
 })
