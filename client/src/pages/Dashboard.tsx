@@ -232,32 +232,6 @@ export default function Dashboard() {
         )
     ).size
 
-    // Streak
-    const calculateStreak = () => {
-        if (sessions.length === 0) return 0
-        const dates = sessions.map(s =>
-            new Date(s.createdAt).toLocaleDateString("fr-FR")
-        )
-        const uniqueDates = [...new Set(dates)].sort((a, b) =>
-            new Date(b.split("/").reverse().join("-")).getTime() -
-            new Date(a.split("/").reverse().join("-")).getTime()
-        )
-        let streak = 0
-        let current = new Date()
-        current.setHours(0, 0, 0, 0)
-        for (const dateStr of uniqueDates) {
-            const [day, month, year] = dateStr.split("/")
-            const date = new Date(`${year}-${month}-${day}`)
-            const diff = Math.floor(
-                (current.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
-            )
-            if (diff <= 1) {
-                streak++
-                current = date
-            } else break
-        }
-        return streak
-    }
 
     // Graphique par jour de la semaine
     const getWeekDaysData = () => {
@@ -304,7 +278,6 @@ export default function Dashboard() {
         maitrise: userChords.filter(c => c.statut === "maîtrisé").length
     }
 
-    const streak = calculateStreak()
 
     if (loading) return (
         <PageWrapper title="📊 Dashboard">
@@ -522,7 +495,6 @@ export default function Dashboard() {
                                             radius={[8, 8, 0, 0]}
                                             label={{
                                                 position: "top",
-                                                formatter: (v: number) => v > 0 ? `${v}` : "",
                                                 fontSize: 11,
                                                 fill: "var(--text-secondary)"
                                             }}

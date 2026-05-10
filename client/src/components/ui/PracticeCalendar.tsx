@@ -209,20 +209,7 @@ export default function PracticeCalendar({ sessions, weeklyGoal = 3 }: PracticeC
     }, [sessions])
 
     // Labels des mois
-    const monthLabels = React.useMemo(() => {
-        const labels: Array<{ label: string, colIndex: number }> = []
-        let lastMonth = -1
 
-        weeks.forEach((week, i) => {
-            const month = new Date(week[0].date).getMonth()
-            if (month !== lastMonth) {
-                labels.push({ label: MONTHS[month], colIndex: i })
-                lastMonth = month
-            }
-        })
-
-        return labels
-    }, [weeks])
 
     const weeklyProgress = Math.min((thisWeekSessions / weeklyGoal) * 100, 100)
     const goalReached = thisWeekSessions >= weeklyGoal

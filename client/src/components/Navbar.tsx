@@ -9,7 +9,6 @@ export default function Navbar() {
     const navigate = useNavigate()
     const location = useLocation()
     const [scrolled, setScrolled] = useState(false)
-    const [menuOpen, setMenuOpen] = useState(false)
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10)
