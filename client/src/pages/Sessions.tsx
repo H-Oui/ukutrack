@@ -285,7 +285,7 @@ export default function Sessions() {
 
     return (
         <PageWrapper
-            title="⏱️ Sessions de pratique"
+            title="️ Sessions de pratique"
             subtitle="Enregistre et suis tes sessions d'entraînement"
         >
             {/* Stats */}
@@ -349,7 +349,7 @@ export default function Sessions() {
                         style={{ alignSelf: "flex-start" } as React.CSSProperties}
                         fullWidth
                     >
-                        {loading ? "Enregistrement..." : "✅ Enregistrer"}
+                        {loading ? "Enregistrement..." : " Enregistrer"}
                     </Button>
                 </div>
             </Card>
@@ -368,7 +368,7 @@ export default function Sessions() {
                     animate={{ opacity: 1 }}
                     style={styles.emptyState}
                 >
-                    <p style={styles.emptyEmoji}>⏱️</p>
+                    <p style={styles.emptyEmoji}>️</p>
                     <p style={styles.emptyText}>
                         Aucune session enregistrée
                     </p>
@@ -393,7 +393,7 @@ export default function Sessions() {
                                         </div>
 
                                         <p style={styles.sessionDate}>
-                                            📅 {formatDate(session.createdAt)}
+                                             {formatDate(session.createdAt)}
                                         </p>
 
                                         {session.notes && (

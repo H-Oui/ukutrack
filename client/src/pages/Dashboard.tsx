@@ -328,7 +328,7 @@ export default function Dashboard() {
                             <AnimatedCounter value={totalDaysPracticed} />
                         </p>
                     </div>
-                    <span style={{ fontSize: "1.8rem" }}>📆</span>
+
                 </div>
 
                 <div style={{
@@ -522,7 +522,7 @@ export default function Dashboard() {
             <div style={styles.twoCol}>
                 {/* Chansons */}
                 <Card hoverable={false}>
-                    <p style={styles.sectionTitle}>🎵 Chansons</p>
+                    <p style={styles.sectionTitle}> Chansons</p>
                     <div style={styles.miniStatRow}>
                         {[
                             { label: "À apprendre", value: songsStats.aApprendre, color: "#f59e0b" },
@@ -571,7 +571,7 @@ export default function Dashboard() {
 
                 {/* Accords */}
                 <Card hoverable={false}>
-                    <p style={styles.sectionTitle}>🎸 Accords</p>
+                    <p style={styles.sectionTitle}> Accords</p>
                     <div style={styles.miniStatRow}>
                         {[
                             { label: "En apprentissage", value: chordsStats.enApprentissage, color: "#f59e0b" },

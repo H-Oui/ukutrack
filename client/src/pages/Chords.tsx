@@ -75,7 +75,8 @@ const styles = {
     chordsGrid: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-        marginTop: "24px"
+        marginTop: "24px",
+        gap: "14px",
     } as React.CSSProperties,
     chordName: {
         fontWeight: 800,
