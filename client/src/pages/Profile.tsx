@@ -255,7 +255,7 @@ export default function Profile() {
 
             {/* Formulaire de modification */}
             <Card hoverable={false}>
-                <p style={styles.sectionTitle}>✏️ Modifier mes informations</p>
+                <p style={styles.sectionTitle}>️ Modifier mes informations</p>
 
                 <div style={styles.form}>
                     <Input
@@ -277,9 +277,9 @@ export default function Profile() {
                         onChange={(e) => setNiveau(e.target.value)}
                         delay={0.2}
                         options={[
-                            { value: "débutant", label: "🌱 Débutant" },
-                            { value: "intermédiaire", label: "🎯 Intermédiaire" },
-                            { value: "avancé", label: "🔥 Avancé" }
+                            { value: "débutant", label: " Débutant" },
+                            { value: "intermédiaire", label: " Intermédiaire" },
+                            { value: "avancé", label: " Avancé" }
                         ]}
                     />
                     <Input
@@ -297,7 +297,7 @@ export default function Profile() {
                             animate={{ opacity: 1, y: 0 }}
                             style={styles.successMsg}
                         >
-                            ✅ {success}
+                             {success}
                         </motion.div>
                     )}
                 </div>
@@ -321,7 +321,7 @@ export default function Profile() {
                         variant="danger"
                         fullWidth
                     >
-                        🚪 Se déconnecter
+                         Se déconnecter
                     </Button>
                 </div>
             </Card>

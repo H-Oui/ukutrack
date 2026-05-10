@@ -34,11 +34,6 @@ const statutColors: Record<string, { bg: string, color: string }> = {
     "maîtrisée":   { bg: "rgba(16,185,129,0.12)",  color: "#10b981" }
 }
 
-const statutIcons: Record<string, string> = {
-    "à apprendre": "📋",
-    "en cours":    "🎯",
-    "maîtrisée":   "✅"
-}
 
 const styles: Record<string, React.CSSProperties> = {
     searchWrapper: {
@@ -332,7 +327,7 @@ export default function Songs() {
                 <div style={styles.searchWrapper}>
                     <input
                         type="text"
-                        placeholder="🔍 Rechercher sur YouTube..."
+                        placeholder=" Rechercher sur YouTube..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && searchYoutube()}
@@ -382,7 +377,7 @@ export default function Songs() {
                 {/* Recherche locale */}
                 <input
                     type="text"
-                    placeholder="🔎 Filtrer mes chansons..."
+                    placeholder=" Filtrer mes chansons..."
                     value={localSearch}
                     onChange={e => setLocalSearch(e.target.value)}
                     style={{ ...styles.filterInput, maxWidth: "240px" }}
@@ -467,7 +462,7 @@ export default function Songs() {
                                                     </span>
                                                 </div>
 
-                                                <p style={styles.songArtist}>🎤 {song.artiste}</p>
+                                                <p style={styles.songArtist}> {song.artiste}</p>
 
                                                 {/* Notes */}
                                                 <textarea
@@ -492,9 +487,9 @@ export default function Songs() {
                                                         value={song.statut}
                                                         onChange={e => updateStatut(song.id, e.target.value)}
                                                         options={[
-                                                            { value: "à apprendre", label: "📋 À apprendre" },
-                                                            { value: "en cours",    label: "🎯 En cours" },
-                                                            { value: "maîtrisée",   label: "✅ Maîtrisée" }
+                                                            { value: "à apprendre", label: " À apprendre" },
+                                                            { value: "en cours",    label: " En cours" },
+                                                            { value: "maîtrisée",   label: " Maîtrisée" }
                                                         ]}
                                                     />
                                                     {song.youtubeUrl && (

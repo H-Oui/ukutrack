@@ -168,7 +168,7 @@ export default function Register() {
                     </motion.div>
                     <h1 style={styles.logoTitle}>UkuTrack</h1>
                     <p style={styles.logoSubtitle}>
-                        Crée ton compte et commence à progresser 🌺
+                        Crée ton compte et commence à progresser
                     </p>
                 </motion.div>
 
@@ -214,9 +214,9 @@ export default function Register() {
                         onChange={(e) => setNiveau(e.target.value)}
                         delay={0.45}
                         options={[
-                            { value: "débutant", label: "🌱 Débutant" },
-                            { value: "intermédiaire", label: "🎯 Intermédiaire" },
-                            { value: "avancé", label: "🔥 Avancé" }
+                            { value: "débutant", label: " Débutant" },
+                            { value: "intermédiaire", label: " Intermédiaire" },
+                            { value: "avancé", label: "Avancé" }
                         ]}
                     />
 

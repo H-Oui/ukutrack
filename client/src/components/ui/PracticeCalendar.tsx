@@ -218,7 +218,7 @@ export default function PracticeCalendar({ sessions, weeklyGoal = 3 }: PracticeC
         <div style={styles.wrapper}>
             {/* Header */}
             <div style={styles.header}>
-                <p style={styles.title}>📅 Calendrier de pratique</p>
+                <p style={styles.title}>Calendrier de pratique</p>
 
                 {/* Objectif hebdomadaire */}
                 <div style={styles.weeklyGoalWrapper}>

@@ -162,7 +162,7 @@ function AnimatedCounter({ value, delay = 0 }: { value: number, delay?: number }
         const controls = animate(count, value, {
             duration: 1.2,
             ease: "easeOut",
-            delay // 👈 clé ici
+            delay
         })
 
         const unsubscribe = rounded.on("change", (v) => {
@@ -280,7 +280,7 @@ export default function Dashboard() {
 
 
     if (loading) return (
-        <PageWrapper title="📊 Dashboard">
+        <PageWrapper title=" Dashboard">
             <div style={{ textAlign: "center", padding: "50px", color: "var(--text-secondary)" } as React.CSSProperties}>
                 <motion.p
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -296,7 +296,7 @@ export default function Dashboard() {
 
     return (
         <PageWrapper
-            title="📊 Dashboard"
+            title=" Dashboard"
             subtitle="Bienvenue ! Voici ta progression en un coup d'œil."
         >
             {/* Practice Summary */}
@@ -305,7 +305,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", // ✅ était display flex
+                    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
                     gap: "16px",
                     marginBottom: "24px"
                 }as React.CSSProperties}
@@ -400,7 +400,7 @@ export default function Dashboard() {
                     justifyContent: "space-between",
                     marginBottom: "16px"
                 } as React.CSSProperties}>
-                    <p style={styles.sectionTitle}>📅 Pratique</p>
+                    <p style={styles.sectionTitle}> Pratique</p>
                     <div style={{
                         display: "flex",
                         gap: "6px",
@@ -431,7 +431,7 @@ export default function Dashboard() {
                                     transition: "all 0.2s ease"
                                 } as React.CSSProperties}
                             >
-                                {view === "Semaine" ? "📊 Semaine" : "📅 Calendrier"}
+                                {view === "Semaine" ? " Semaine" : " Calendrier"}
                             </button>
                         ))}
                     </div>
@@ -449,7 +449,7 @@ export default function Dashboard() {
                         >
                             {getWeekDaysData().every(d => d.minutes === 0) ? (
                                 <div style={styles.emptyChart}>
-                                    <p>😴 Aucune session cette semaine</p>
+                                    <p> Aucune session cette semaine</p>
                                     <p style={{ marginTop: "6px" }}>
                                         Lance-toi, même 10 minutes c'est bien !
                                     </p>

@@ -295,9 +295,9 @@ export default function Chords() {
                 <span style={{ ...styles.filterLabel, width: "100%" }}>Statut :</span>
                 {[
                     { value: "tous", label: "Tous" },
-                    { value: "non commencé", label: "⬜ Non commencé" },
-                    { value: "en apprentissage", label: "📖 En apprentissage" },
-                    { value: "maîtrisé", label: "✅ Maîtrisé" }
+                    { value: "non commencé", label: " Non commencé" },
+                    { value: "en apprentissage", label: " En apprentissage" },
+                    { value: "maîtrisé", label: " Maîtrisé" }
                 ].map(f => (
                     <FilterBtn
                         key={f.value}
@@ -374,8 +374,8 @@ export default function Chords() {
                                                 : "#f59e0b"
                                         }}>
                                             {userChord.statut === "maîtrisé"
-                                                ? "✅ Maîtrisé"
-                                                : "📖 En apprentissage"}
+                                                ? " Maîtrisé"
+                                                : " En apprentissage"}
                                         </span>
                                     )}
 
@@ -389,8 +389,8 @@ export default function Chords() {
                                                 }
                                                 style={styles.selectStatut}
                                             >
-                                                <option value="en apprentissage">📖 En apprentissage</option>
-                                                <option value="maîtrisé">✅ Maîtrisé</option>
+                                                <option value="en apprentissage"> En apprentissage</option>
+                                                <option value="maîtrisé"> Maîtrisé</option>
                                             </select>
                                             <Button
                                                 variant="danger"

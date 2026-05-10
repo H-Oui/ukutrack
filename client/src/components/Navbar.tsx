@@ -25,10 +25,10 @@ export default function Navbar() {
     const isActive = (path: string) => location.pathname === path
 
     const links = [
-        { path: "/dashboard", label: "Dashboard", icon: "📊" },
-        { path: "/songs", label: "Chansons", icon: "🎵" },
-        { path: "/chords", label: "Accords", icon: "🎸" },
-        { path: "/sessions", label: "Sessions", icon: "⏱️" },
+        { path: "/dashboard", label: "Dashboard" },
+        { path: "/songs", label: "Chansons"},
+        { path: "/chords", label: "Accords" },
+        { path: "/sessions", label: "Sessions" },
         { path: "/profile", label: "Profil", icon: "👤" },
     ]
 
