@@ -8,7 +8,10 @@ const app = express()
 
 // CORS
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://ton-frontend.vercel.app"
+    ],
     credentials: true
 }))
 
@@ -31,8 +34,8 @@ app.use("/sessions", sessionsRoutes)
 const profileRoutes = require("./routes/profile")
 app.use("/profile", profileRoutes)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })

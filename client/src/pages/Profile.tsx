@@ -8,6 +8,9 @@ import PageWrapper from "../components/ui/PageWrapper"
 import Card from "../components/ui/Card"
 import * as React from "react"
 
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface UserProfile {
     id: string
     email: string
@@ -140,14 +143,18 @@ export default function Profile() {
     const [email, setEmail] = useState("")
 
     const fetchProfile = async () => {
-        const res = await fetch("http://localhost:3001/profile", {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        const data = await res.json()
-        setProfile(data)
-        setUsername(data.username)
-        setNiveau(data.niveau)
-        setEmail(data.email)
+        try {
+            const res = await fetch(`${API_URL}/profile`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            const data = await res.json()
+            setProfile(data)
+            setUsername(data.username)
+            setNiveau(data.niveau)
+            setEmail(data.email)
+        } catch (err) {
+            console.error("Erreur lors de la récupération du profil:", err)
+        }
     }
 
     useEffect(() => {
@@ -161,23 +168,27 @@ export default function Profile() {
         const body: Record<string, string> = { username, niveau, email }
         if (password) body.password = password
 
-        const res = await fetch("http://localhost:3001/profile", {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(body)
-        })
+        try {
+            const res = await fetch(`${API_URL}/profile`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            })
 
-        if (res.ok) {
-            setSuccess("Profil mis à jour avec succès !")
-            setPassword("")
-            fetchProfile()
-            setTimeout(() => setSuccess(""), 3000)
+            if (res.ok) {
+                setSuccess("Profil mis à jour avec succès !")
+                setPassword("")
+                fetchProfile()
+                setTimeout(() => setSuccess(""), 3000)
+            }
+        } catch (err) {
+            console.error("Erreur lors de la mise à jour:", err)
+        } finally {
+            setLoading(false)
         }
-
-        setLoading(false)
     }
 
     const formatDate = (dateStr: string) =>

@@ -7,6 +7,9 @@ import Button from "../components/ui/Button"
 import Input from "../components/ui/Input"
 import Card from "../components/ui/Card"
 
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface Session {
     id: string
     dureeMinutes: number
@@ -190,25 +193,26 @@ export default function Sessions() {
 
     const fetchSessions = async () => {
         try {
-            const res = await fetch("http://localhost:3001/sessions", {
+            const res = await fetch(`${API_URL}/sessions`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
+            if (!res.ok) throw new Error("Erreur lors de la récupération");
             const data = await res.json()
             setSessions(data)
         } catch (err) {
-            console.error(err)
+            console.error("Fetch sessions error:", err)
         }
     }
 
     useEffect(() => {
-        fetchSessions().catch(console.error)
-    }, [])
+        if (token) fetchSessions().catch(console.error)
+    }, [token])
 
     const addSession = async () => {
         if (!duree) return
         setLoading(true)
         try {
-            await fetch("http://localhost:3001/sessions", {
+            const res = await fetch(`${API_URL}/sessions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -219,11 +223,14 @@ export default function Sessions() {
                     notes
                 })
             })
-            setDuree("")
-            setNotes("")
-            await fetchSessions()
+
+            if (res.ok) {
+                setDuree("")
+                setNotes("")
+                await fetchSessions()
+            }
         } catch (err) {
-            console.error(err)
+            console.error("Add session error:", err)
         } finally {
             setLoading(false)
         }
@@ -231,13 +238,15 @@ export default function Sessions() {
 
     const deleteSession = async (id: string) => {
         try {
-            await fetch(`http://localhost:3001/sessions/${id}`, {
+            const res = await fetch(`${API_URL}/sessions/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
             })
-            await fetchSessions()
+            if (res.ok) {
+                await fetchSessions()
+            }
         } catch (err) {
-            console.error(err)
+            console.error("Delete session error:", err)
         }
     }
 
@@ -371,7 +380,6 @@ export default function Sessions() {
                             <Card key={session.id} delay={i * 0.05}>
                                 <div style={styles.sessionCard}>
                                     <div style={styles.sessionLeft}>
-                                        {/* Durée + badge */}
                                         <div style={styles.sessionTopRow}>
                                             <p style={styles.sessionDuree}>
                                                 🎵 {session.dureeMinutes} minutes
@@ -381,12 +389,10 @@ export default function Sessions() {
                                             </span>
                                         </div>
 
-                                        {/* Date */}
                                         <p style={styles.sessionDate}>
                                             📅 {formatDate(session.createdAt)}
                                         </p>
 
-                                        {/* Notes */}
                                         {session.notes && (
                                             <motion.p
                                                 initial={{ opacity: 0 }}

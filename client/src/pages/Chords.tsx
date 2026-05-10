@@ -6,6 +6,9 @@ import Button from "../components/ui/Button"
 import Badge from "../components/ui/Badge"
 import PageWrapper from "../components/ui/PageWrapper"
 
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface Chord {
     id: string
     nom: string
@@ -133,7 +136,7 @@ export default function Chords() {
 
     const fetchChords = async () => {
         try {
-            const res = await fetch("http://localhost:3001/chords", {
+            const res = await fetch(`${API_URL}/chords`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             const data = await res.json()
@@ -145,7 +148,7 @@ export default function Chords() {
 
     const fetchUserChords = async () => {
         try {
-            const res = await fetch("http://localhost:3001/chords/user", {
+            const res = await fetch(`${API_URL}/chords/user`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             const data = await res.json()
@@ -163,7 +166,7 @@ export default function Chords() {
     }, [token])
 
     const addChord = async (chordId: string) => {
-        await fetch(`http://localhost:3001/chords/user/${chordId}`, {
+        await fetch(`${API_URL}/chords/user/${chordId}`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -171,7 +174,7 @@ export default function Chords() {
     }
 
     const updateStatut = async (id: string, statut: Statut) => {
-        await fetch(`http://localhost:3001/chords/user/${id}`, {
+        await fetch(`${API_URL}/chords/user/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -183,7 +186,7 @@ export default function Chords() {
     }
 
     const removeChord = async (id: string) => {
-        await fetch(`http://localhost:3001/chords/user/${id}`, {
+        await fetch(`${API_URL}/chords/user/${id}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` }
         })

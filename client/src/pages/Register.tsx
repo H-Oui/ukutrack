@@ -5,6 +5,10 @@ import Input from "../components/ui/Input"
 import Button from "../components/ui/Button"
 import Select from "../components/ui/Select"
 import ErrorMessage from "../components/ui/ErrorMessage"
+import * as React from "react";
+
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
 
 const styles = {
     page: {
@@ -105,21 +109,27 @@ export default function Register() {
         setError("")
         setLoading(true)
 
-        const res = await fetch("http://localhost:3001/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, username, niveau })
-        })
+        try {
+            const res = await fetch(`${API_URL}/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, username, niveau })
+            })
 
-        const data = await res.json()
-        setLoading(false)
+            const data = await res.json()
+            setLoading(false)
 
-        if (!res.ok) {
-            setError(data.error)
-            return
+            if (!res.ok) {
+                setError(data.error || "Une erreur est survenue lors de l'inscription")
+                return
+            }
+
+            navigate("/login")
+        } catch (err) {
+            setLoading(false)
+            setError("Impossible de contacter le serveur de création de compte.")
+            console.error(err)
         }
-
-        navigate("/login")
     }
 
     return (

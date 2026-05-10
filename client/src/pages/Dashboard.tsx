@@ -14,6 +14,8 @@ import {
 import { animate } from "framer-motion"
 import { useMotionValue, useTransform } from "framer-motion"
 
+
+const API_URL = import.meta.env.VITE_API_URL
 interface Session {
     id: string
     dureeMinutes: number
@@ -188,25 +190,30 @@ export default function Dashboard() {
         const fetchAll = async () => {
             try {
                 const headers = { Authorization: `Bearer ${token}` }
+
                 const [sessionsRes, songsRes, chordsRes] = await Promise.all([
-                    fetch("http://localhost:3001/sessions", { headers }),
-                    fetch("http://localhost:3001/songs", { headers }),
-                    fetch("http://localhost:3001/chords/user", { headers })
+                    fetch(`${API_URL}/sessions`, { headers }),
+                    fetch(`${API_URL}/songs`, { headers }),
+                    fetch(`${API_URL}/chords/user`, { headers })
                 ])
+
                 const [sessionsData, songsData, chordsData] = await Promise.all([
                     sessionsRes.json(),
                     songsRes.json(),
                     chordsRes.json()
                 ])
+
                 setSessions(sessionsData)
                 setSongs(songsData)
                 setUserChords(chordsData)
+
             } catch (err) {
                 console.error(err)
             } finally {
                 setLoading(false)
             }
         }
+
         void fetchAll()
     }, [token])
 

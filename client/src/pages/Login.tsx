@@ -7,6 +7,9 @@ import Button from "../components/ui/Button"
 import ErrorMessage from "../components/ui/ErrorMessage"
 import * as React from "react";
 
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
+
 const styles = {
     page: {
         minHeight: "100vh",
@@ -105,22 +108,28 @@ export default function Login() {
         setError("")
         setLoading(true)
 
-        const res = await fetch("http://localhost:3001/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        })
+        try {
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            })
 
-        const data = await res.json()
-        setLoading(false)
+            const data = await res.json()
+            setLoading(false)
 
-        if (!res.ok) {
-            setError(data.error)
-            return
+            if (!res.ok) {
+                setError(data.error || "Une erreur est survenue")
+                return
+            }
+
+            login(data.token, data.user)
+            navigate("/dashboard")
+        } catch (err) {
+            setLoading(false)
+            setError("Impossible de contacter le serveur")
+            console.error(err)
         }
-
-        login(data.token, data.user)
-        navigate("/dashboard")
     }
 
     return (

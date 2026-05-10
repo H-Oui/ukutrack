@@ -7,6 +7,9 @@ import Select from "../components/ui/Select"
 import PageWrapper from "../components/ui/PageWrapper"
 import * as React from "react";
 
+// Récupération de l'URL API depuis les variables d'environnement Vite
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface YoutubVideo {
     id: { videoId: string }
     snippet: {
@@ -150,68 +153,90 @@ export default function Songs() {
     const [filter, setFilter] = useState("tous")
 
     const fetchSongs = async () => {
-        const res = await fetch("http://localhost:3001/songs", {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        const data = await res.json()
-        setSongs(data)
+        try {
+            const res = await fetch(`${API_URL}/songs`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (!res.ok) throw new Error("Erreur lors de la récupération");
+            const data = await res.json()
+            setSongs(data)
+        } catch (err) {
+            console.error("Fetch songs error:", err)
+        }
     }
 
     useEffect(() => {
-        fetchSongs()
-    }, [])
+        if (token) fetchSongs()
+    }, [token])
 
     const searchYoutube = async () => {
         if (!search) return
         setLoading(true)
-        const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
-        const query = encodeURIComponent(`${search} ukulele`)
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=5&key=${API_KEY}`
-        const res = await fetch(url)
-        const data = await res.json()
-        setResults(data.items || [])
-        setLoading(false)
+        try {
+            const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
+            const query = encodeURIComponent(`${search} ukulele`)
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=5&key=${API_KEY}`
+            const res = await fetch(url)
+            const data = await res.json()
+            setResults(data.items || [])
+        } catch (err) {
+            console.error("YouTube search error:", err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const addSong = async (video: YoutubVideo) => {
-        const res = await fetch("http://localhost:3001/songs", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                titre: video.snippet.title,
-                artiste: video.snippet.channelTitle,
-                youtubeUrl: `https://www.youtube.com/watch?v=${video.id.videoId}`,
-                youtubeThumbnail: video.snippet.thumbnails.medium.url
+        try {
+            const res = await fetch(`${API_URL}/songs`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titre: video.snippet.title,
+                    artiste: video.snippet.channelTitle,
+                    youtubeUrl: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+                    youtubeThumbnail: video.snippet.thumbnails.medium.url
+                })
             })
-        })
-        if (res.ok) {
-            fetchSongs()
-            setResults([])
-            setSearch("")
+            if (res.ok) {
+                fetchSongs()
+                setResults([])
+                setSearch("")
+            }
+        } catch (err) {
+            console.error("Add song error:", err)
         }
     }
 
     const updateStatut = async (id: string, statut: string) => {
-        await fetch(`http://localhost:3001/songs/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ statut })
-        })
-        fetchSongs()
+        try {
+            const res = await fetch(`${API_URL}/songs/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ statut })
+            })
+            if (res.ok) fetchSongs()
+        } catch (err) {
+            console.error("Update statut error:", err)
+        }
     }
 
     const deleteSong = async (id: string) => {
-        await fetch(`http://localhost:3001/songs/${id}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        fetchSongs()
+        try {
+            const res = await fetch(`${API_URL}/songs/${id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (res.ok) fetchSongs()
+        } catch (err) {
+            console.error("Delete song error:", err)
+        }
     }
 
     const filteredSongs = songs.filter(s =>
@@ -223,7 +248,6 @@ export default function Songs() {
             title="🎵 Mes chansons"
             subtitle="Recherche et gère ton répertoire ukulélé"
         >
-            {/* Barre de recherche */}
             <Card style={{ marginBottom: "24px" }} hoverable={false}>
                 <div style={styles.searchWrapper}>
                     <input
@@ -233,7 +257,7 @@ export default function Songs() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && searchYoutube()}
-                        style={{ flex: 1 }}
+                        style={{ ...styles.searchInput, flex: 1 }}
                     />
                     <Button onClick={searchYoutube} disabled={loading}>
                         {loading ? "..." : "Rechercher"}
@@ -241,7 +265,6 @@ export default function Songs() {
                 </div>
             </Card>
 
-            {/* Résultats YouTube */}
             {loading && (
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -290,7 +313,6 @@ export default function Songs() {
                 )}
             </AnimatePresence>
 
-            {/* Filtres + Header liste */}
             <div style={styles.listHeader}>
                 <h2>Ma liste ({songs.length})</h2>
                 <div style={{ display: "flex", gap: "8px" }}>
@@ -325,7 +347,6 @@ export default function Songs() {
                 </div>
             </div>
 
-            {/* Liste des chansons */}
             {filteredSongs.length === 0 ? (
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -354,7 +375,6 @@ export default function Songs() {
                                             <p style={styles.songTitle}>{song.titre}</p>
                                             <p style={styles.songArtist}>{song.artiste}</p>
 
-                                            {/* Badge statut */}
                                             <span style={{
                                                 display: "inline-block",
                                                 padding: "2px 10px",
@@ -381,15 +401,14 @@ export default function Songs() {
                                                     ]}
                                                 />
                                                 {song.youtubeUrl && (
-
-                                                   <a href={song.youtubeUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    style={styles.youtubeLink}
+                                                    <a href={song.youtubeUrl}
+                                                       target="_blank"
+                                                       rel="noreferrer"
+                                                       style={styles.youtubeLink}
                                                     >
-                                                    ▶ YouTube
+                                                        ▶ YouTube
                                                     </a>
-                                                    )}
+                                                )}
                                             </div>
                                         </div>
 
