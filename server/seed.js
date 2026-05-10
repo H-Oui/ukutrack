@@ -2,8 +2,6 @@ const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
 async function main() {
-    await prisma.chord.deleteMany()
-
     const chords = [
         // ========= MAJOR =========
         {
@@ -199,10 +197,16 @@ async function main() {
     ]
 
     for (const chord of chords) {
-        await prisma.chord.create({ data: chord })
+        await prisma.chord.upsert({
+            where: {
+                symbole: chord.symbole
+            },
+            update: {},
+            create: chord
+        })
     }
 
-    console.log("✅ Chords seeded successfully!")
+    console.log("✅ Chords seeded safely (no data loss)")
 }
 
 main()

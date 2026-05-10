@@ -40,9 +40,9 @@ model Chord {
   id            String   @id @default(cuid())
 
   nom           String
-  symbole       String?  // C, Am, F#m7...
-  tonalite      String?  // C, D, E...
-  type          String?  // majeur, mineur, 7, maj7...
+  symbole       String   @unique
+  tonalite      String?
+  type          String?
 
   difficulte    String   @default("facile")
 
@@ -51,7 +51,7 @@ model Chord {
 
   description   String?
 
-  tags          String? // "pop,rock,jazz"
+  tags          String?
 
   createdAt     DateTime @default(now())
 
