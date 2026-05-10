@@ -418,7 +418,6 @@ export default function Songs() {
                     <AnimatePresence>
                         {filteredSongs.map((song, i) => {
                             const sc = statutColors[song.statut] || statutColors["à apprendre"]
-                            const icon = statutIcons[song.statut] || "📋"
                             return (
                                 <motion.div
                                     key={song.id}
@@ -458,7 +457,7 @@ export default function Songs() {
                                                         color: sc.color,
                                                         whiteSpace: "nowrap"
                                                     }}>
-                                                        {icon} {song.statut}
+                                                       {song.statut}
                                                     </span>
                                                 </div>
 
