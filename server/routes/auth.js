@@ -4,7 +4,13 @@ const jwt = require("jsonwebtoken")
 const { PrismaClient } = require("@prisma/client")
 
 const router = express.Router()
-const prisma = new PrismaClient()
+
+// Prisma singleton (important pour Render)
+const prisma = global.prisma || new PrismaClient()
+
+if (process.env.NODE_ENV !== "production") {
+    global.prisma = prisma
+}
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -15,7 +21,10 @@ router.post("/register", async (req, res) => {
     try {
         const { email, password, username } = req.body
 
-        // check user exist
+        if (!email || !password || !username) {
+            return res.status(400).json({ error: "Missing fields" })
+        }
+
         const existingUser = await prisma.user.findUnique({
             where: { email }
         })
@@ -24,10 +33,8 @@ router.post("/register", async (req, res) => {
             return res.status(400).json({ error: "User already exists" })
         }
 
-        // hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // create user
         const user = await prisma.user.create({
             data: {
                 email,
@@ -56,6 +63,10 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body
+
+        if (!email || !password) {
+            return res.status(400).json({ error: "Missing fields" })
+        }
 
         const user = await prisma.user.findUnique({
             where: { email }

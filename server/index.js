@@ -3,6 +3,9 @@ const cors = require("cors")
 
 const authRoutes = require("./routes/auth")
 const songsRoutes = require("./routes/songs")
+const chordsRoutes = require("./routes/chords")
+const sessionsRoutes = require("./routes/sessions")
+const profileRoutes = require("./routes/profile")
 
 const app = express()
 
@@ -10,7 +13,7 @@ const app = express()
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://ton-frontend.vercel.app"
+        "https://ukutrack-5qef.vercel.app"
     ],
     credentials: true
 }))
@@ -25,13 +28,8 @@ app.get("/", (req, res) => {
 // routes
 app.use("/auth", authRoutes)
 app.use("/songs", songsRoutes)
-const chordsRoutes = require("./routes/chords")
 app.use("/chords", chordsRoutes)
-
-const sessionsRoutes = require("./routes/sessions")
 app.use("/sessions", sessionsRoutes)
-
-const profileRoutes = require("./routes/profile")
 app.use("/profile", profileRoutes)
 
 const PORT = process.env.PORT || 3001
