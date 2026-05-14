@@ -242,7 +242,7 @@ export default function Chords() {
 
     return (
         <PageWrapper
-            title="🎸 Mes Accords"
+            title=" Mes Accords"
             subtitle="Suis ta progression sur chaque accord"
         >
             {/* Stats */}
@@ -317,7 +317,6 @@ export default function Chords() {
                     animate={{ opacity: 1 }}
                     style={styles.emptyState}
                 >
-                    <p style={{ fontSize: "2.5rem" }}>🎸</p>
                     <p>Aucun accord dans cette catégorie</p>
                 </motion.div>
             ) : (

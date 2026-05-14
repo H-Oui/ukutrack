@@ -29,6 +29,7 @@ export default function Navbar() {
         { path: "/songs", label: "Chansons"},
         { path: "/chords", label: "Accords" },
         { path: "/sessions", label: "Sessions" },
+        { path: "/tuner", label: "Accordeur", },
         { path: "/profile", label: "Profil", icon: "👤" },
     ]
 

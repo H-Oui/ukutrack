@@ -9,6 +9,7 @@ import Sessions from "./pages/Sessions"
 import Dashboard from "./pages/Dashboard"
 import Navbar from "./components/Navbar"
 import Profile from "./pages/Profile"
+import TunerPage from "./pages/Tuner"
 
 
 
@@ -50,6 +51,11 @@ function App() {
             <Route path="/dashboard" element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            } />
+            <Route path="/tuner" element={
+              <PrivateRoute>
+                <TunerPage />
               </PrivateRoute>
             } />
 
