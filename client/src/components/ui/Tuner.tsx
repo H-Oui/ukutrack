@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 
 const UKULELE_STRINGS = [
-    { note: "G", frequency: 392.0, string: 4 },
+    { note: "G", frequency: 391.995, string: 4 },
     { note: "C", frequency: 261.63, string: 3 },
-    { note: "E", frequency: 329.63, string: 2 },
+    { note: "E", frequency: 329.628, string: 2 },
     { note: "A", frequency: 440.0, string: 1 }
 ]
 
@@ -19,11 +19,18 @@ function getCents(detected: number, target: number) {
     return Math.round(1200 * Math.log2(detected / target))
 }
 
+function correctOctave(frequency: number): number {
+    let f = frequency
+    while (f > 500) f /= 2
+    while (f < 200) f *= 2
+    return f
+}
+
 function detectPitch(buffer: Float32Array, sampleRate: number): number | null {
     let rms = 0
     for (let i = 0; i < buffer.length; i++) rms += buffer[i] * buffer[i]
     rms = Math.sqrt(rms / buffer.length)
-    if (rms < 0.02) return null
+    if (rms < 0.05) return null
 
     const SIZE = buffer.length
     const correlations = new Float32Array(SIZE)
@@ -72,7 +79,7 @@ export default function Tuner() {
     const rafRef = useRef<number | null>(null)
     const historyRef = useRef<number[]>([])
 
-    const HISTORY_SIZE = 8
+    const HISTORY_SIZE = 12
 
     const start = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -94,7 +101,8 @@ export default function Tuner() {
             const pitch = detectPitch(buffer, ctx.sampleRate)
 
             if (pitch && pitch > 60 && pitch < 1500) {
-                historyRef.current.push(pitch)
+                const correctedPitch = correctOctave(pitch)
+                historyRef.current.push(correctedPitch)
                 if (historyRef.current.length > HISTORY_SIZE) {
                     historyRef.current.shift()
                 }
@@ -104,7 +112,7 @@ export default function Tuner() {
                 const variance = historyRef.current.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / historyRef.current.length
                 const stdDev = Math.sqrt(variance)
 
-                if (stdDev < 15) {
+                if (stdDev < 8) {
                     const note = getNearestNote(avg)
                     const c = getCents(avg, note.frequency)
                     setFrequency(Math.round(avg * 10) / 10)
