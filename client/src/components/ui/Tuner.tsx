@@ -8,11 +8,10 @@ const UKULELE_STRINGS = [
 ]
 
 function getNearestNote(frequency: number) {
-    return UKULELE_STRINGS.reduce((closest, string) => {
-        return Math.abs(string.frequency - frequency) <  // 👈 le < manquait
-        Math.abs(closest.frequency - frequency)
-            ? string
-            : closest
+    return UKULELE_STRINGS.reduce((closest, current) => {
+        const closestDiff = Math.abs(closest.frequency - frequency)
+        const currentDiff = Math.abs(current.frequency - frequency)
+        return currentDiff < closestDiff ? current : closest
     })
 }
 
@@ -24,7 +23,7 @@ function detectPitch(buffer: Float32Array, sampleRate: number): number | null {
     let rms = 0
     for (let i = 0; i < buffer.length; i++) rms += buffer[i] * buffer[i]
     rms = Math.sqrt(rms / buffer.length)
-    if (rms < 0.015) return null
+    if (rms < 0.02) return null
 
     const SIZE = buffer.length
     const correlations = new Float32Array(SIZE)
@@ -57,7 +56,7 @@ function detectPitch(buffer: Float32Array, sampleRate: number): number | null {
         }
     }
 
-    if (peak === -1 || peakVal < 0.1) return null
+    if (peak === -1 || peakVal < 0.2) return null
     return sampleRate / peak
 }
 
@@ -71,6 +70,9 @@ export default function Tuner() {
     const analyserRef = useRef<AnalyserNode | null>(null)
     const streamRef = useRef<MediaStream | null>(null)
     const rafRef = useRef<number | null>(null)
+    const historyRef = useRef<number[]>([])
+
+    const HISTORY_SIZE = 8
 
     const start = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -92,11 +94,25 @@ export default function Tuner() {
             const pitch = detectPitch(buffer, ctx.sampleRate)
 
             if (pitch && pitch > 60 && pitch < 1500) {
-                const note = getNearestNote(pitch)
-                const c = getCents(pitch, note.frequency)
-                setFrequency(Math.round(pitch * 10) / 10)
-                setNearestNote(note)
-                setCents(c)
+                historyRef.current.push(pitch)
+                if (historyRef.current.length > HISTORY_SIZE) {
+                    historyRef.current.shift()
+                }
+
+                const avg = historyRef.current.reduce((a, b) => a + b, 0) / historyRef.current.length
+
+                const variance = historyRef.current.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / historyRef.current.length
+                const stdDev = Math.sqrt(variance)
+
+                if (stdDev < 15) {
+                    const note = getNearestNote(avg)
+                    const c = getCents(avg, note.frequency)
+                    setFrequency(Math.round(avg * 10) / 10)
+                    setNearestNote(note)
+                    setCents(c)
+                }
+            } else {
+                historyRef.current = []
             }
 
             rafRef.current = requestAnimationFrame(loop)
@@ -108,6 +124,7 @@ export default function Tuner() {
         rafRef.current && cancelAnimationFrame(rafRef.current)
         streamRef.current?.getTracks().forEach(t => t.stop())
         audioCtxRef.current?.close()
+        historyRef.current = []
         setActive(false)
         setFrequency(null)
         setNearestNote(null)
@@ -139,6 +156,7 @@ export default function Tuner() {
                 🎵 Accordeur ukulélé
             </h3>
 
+            {/* Cordes de référence */}
             <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginBottom: "24px" }}>
                 {UKULELE_STRINGS.map(s => (
                     <div key={s.note} style={{
@@ -160,16 +178,19 @@ export default function Tuner() {
                 ))}
             </div>
 
+            {/* Fréquence détectée */}
             <p style={{ fontSize: "2rem", fontWeight: 800, margin: "0 0 4px 0", color: "var(--text-primary)" }}>
                 {frequency ? `${frequency} Hz` : "—"}
             </p>
 
+            {/* Statut */}
             {status && (
                 <p style={{ fontSize: "1rem", fontWeight: 700, color: status.color, margin: "0 0 16px 0" }}>
                     {status.label}
                 </p>
             )}
 
+            {/* Jauge de cents */}
             <div style={{
                 position: "relative",
                 height: "12px",
